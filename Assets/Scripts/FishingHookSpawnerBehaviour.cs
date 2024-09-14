@@ -17,11 +17,11 @@ public class FishingHookSpawnerBehaviour : MonoBehaviour
     void Update()
     {
         float num = Random.value;
-        if(num < 0.005)
+        if(num < 0.0005)
         {
             GameObject creation = Instantiate(fishingLine, new Vector3(-8.5f + Random.Range(0, 7), 6, 0), new Quaternion());
 
-        }else if (num < 0.01)
+        }else if (num < 0.001)
         {
             GameObject creation = Instantiate(fishingLine, new Vector3(8.5f - Random.Range(0, 7), 6, 0), new Quaternion());
             creation.GetComponent<FishingLineBehaviour>().right = false;

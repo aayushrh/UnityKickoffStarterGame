@@ -8,12 +8,15 @@ public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] public float FRICTION = 0.9f;
     [SerializeField] float SPEED = 20f;
+    [SerializeField] GameObject invincVisual;
     Vector2 velocity = Vector2.zero;
     Rigidbody2D rb = null;
     public GameObject caught = null;
     public float progress = 0.5f;
     private Boolean dashing = false;
     private int dashTimer = 10;
+    private Boolean invinc = false;
+    private float invincTimer = 100;
     // Start is called before the first frame update
     void Start()
     {
@@ -23,7 +26,21 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        invincTimer -= Time.deltaTime;
+        if (invincTimer < 0)
+        {
+            invinc = false;
+            invincVisual.SetActive(false);
+        }
+
         GetComponent<BoxCollider2D>().isTrigger = false;
+        if(caught != null && invinc)
+        {
+            caught = null;
+            invinc = false;
+            invincVisual.SetActive(false);
+        }
         if (caught != null)
         {
             rb.velocity = Vector2.zero;
@@ -107,8 +124,18 @@ public class PlayerMovement : MonoBehaviour
             dashTimer = 10;
             Vector2 prevV = velocity;
             velocity.Normalize();
-            rb.velocity = velocity * 100;
+            rb.velocity = velocity * 20;
             velocity = prevV;
+        }
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.gameObject.tag == "GameController")
+        {
+            Destroy(collision.gameObject);
+            invinc = true;
+            invincVisual.SetActive(true);
+            invincTimer = 10;
         }
     }
 }
